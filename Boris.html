@@ -1,0 +1,2120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boris - Votre réseau social</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF7F00;
+            --primary-light: #FFA040;
+            --primary-dark: #E66A00;
+            --secondary: #42b72a;
+            --bg-light: #f9f5f0;
+            --bg-white: #ffffff;
+            --bg-hover: #f0e6d8;
+            --text-dark: #2c1900;
+            --text-light: #66594d;
+            --text-gray: #8a7f75;
+            --border: #e9dccd;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-md: rgba(0, 0, 0, 0.15);
+            --red: #f02849;
+            --purple: #8a3ab9;
+            --orange: #ff9a3d;
+            --green: #45bd62;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--bg-white);
+            box-shadow: 0 1px 3px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 8px;
+        }
+
+        .search-bar {
+            flex: 0 1 680px;
+            position: relative;
+            margin: 0 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-light);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-bar input:focus {
+            background-color: var(--bg-white);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 127, 0, 0.2);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            font-size: 18px;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        .nav-icon:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .nav-icon.active {
+            color: var(--primary);
+            background-color: rgba(255, 127, 0, 0.15);
+        }
+
+        .nav-icon .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--red);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--orange));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px var(--shadow-md);
+            width: 300px;
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown-header .user-avatar {
+            margin: 0;
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .dropdown-header .user-info {
+            flex: 1;
+        }
+
+        .dropdown-header .user-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .dropdown-header .user-email {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bg-light);
+        }
+
+        .dropdown-item i {
+            width: 30px;
+            font-size: 18px;
+            color: var(--text-light);
+        }
+
+        .dropdown-footer {
+            border-top: 1px solid var(--border);
+            padding: 10px 0;
+        }
+
+        /* Main Content */
+        .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 15px auto;
+            padding: 0 5%;
+            gap: 20px;
+        }
+
+        /* Left Sidebar */
+        .left-sidebar {
+            flex: 0 0 280px;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 85px);
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .sidebar-card {
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 2px var(--shadow);
+        }
+
+        .sidebar-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--primary-dark);
+        }
+
+        .sidebar-title a {
+            color: var(--primary);
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .sidebar-title a:hover {
+            text-decoration: underline;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background-color: var(--bg-light);
+        }
+
+        .sidebar-item i {
+            width: 30px;
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .sidebar-item span {
+            font-size: 15px;
+        }
+
+        .shortcuts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .shortcut {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--bg-light);
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .shortcut:hover {
+            background-color: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .shortcut-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, var(--primary), var(--orange));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .shortcut span {
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* Feed Content */
+        .feed {
+            flex: 1;
+            max-width: 680px;
+        }
+
+        .stories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+
+        .stories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story {
+            min-width: 110px;
+            height: 190px;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 2px 4px var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .story:hover {
+            transform: scale(1.03);
+        }
+
+        .story-bg {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.5s;
+        }
+
+        .story:hover .story-bg {
+            transform: scale(1.05);
+        }
+
+        .story-user {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            background-color: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .story-text {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-weight: 500;
+            font-size: 14px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            padding: 0 5px;
+        }
+
+        .create-story {
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+        }
+
+        .create-story .story-bg {
+            background-color: var(--bg-light);
+        }
+
+        .create-story .story-user {
+            background-color: var(--bg-white);
+            border: none;
+            top: auto;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .create-story .story-text {
+            color: var(--text-dark);
+            font-weight: 500;
+            text-shadow: none;
+        }
+
+        .create-post {
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 2px var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .post-header .user-avatar {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .post-input {
+            flex: 1;
+        }
+
+        .post-input input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-light);
+            font-size: 15px;
+            outline: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .post-input input:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .post-action:hover {
+            background-color: var(--bg-light);
+        }
+
+        .post-action i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .post-action span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .post {
+            background-color: var(--bg-white);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .post-header {
+            padding: 15px 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .post-header .user-info {
+            flex: 1;
+        }
+
+        .post-header .user-name {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .post-header .post-time {
+            font-size: 13px;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+        }
+
+        .post-header .post-time i {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        .post-header .nav-icon {
+            width: 36px;
+            height: 36px;
+        }
+
+        .post-content {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .post-stats .stats-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .post-stats .stats-item:hover {
+            text-decoration: underline;
+        }
+
+        .post-stats .stats-item i {
+            margin-right: 5px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 5px 0;
+        }
+
+        .post-action {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 0;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .post-action:hover {
+            background-color: var(--bg-light);
+        }
+
+        .post-action i {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .post-action.liked {
+            color: var(--primary);
+        }
+
+        .post-action.liked i {
+            color: var(--primary);
+        }
+
+        .comments-container {
+            padding: 10px 15px;
+            border-top: 1px solid var(--border);
+            background-color: var(--bg-light);
+            display: none;
+        }
+
+        .comments-container.show {
+            display: block;
+        }
+
+        .comment {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .comment:last-child {
+            margin-bottom: 0;
+        }
+
+        .comment .user-avatar {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            background-color: var(--bg-white);
+            padding: 8px 12px;
+            border-radius: 18px;
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .comment-user {
+            font-weight: 600;
+            font-size: 13px;
+            margin-right: 8px;
+        }
+
+        .comment-time {
+            font-size: 11px;
+            color: var(--text-light);
+        }
+
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .comment-actions {
+            display: flex;
+            margin-top: 5px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .comment-action {
+            margin-right: 15px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .comment-action:hover {
+            text-decoration: underline;
+        }
+
+        .add-comment {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .add-comment input {
+            flex: 1;
+            padding: 8px 15px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-white);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .add-comment input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            flex: 0 0 300px;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 85px);
+            overflow-y: auto;
+            padding-left: 10px;
+        }
+
+        .contacts-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .contact {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+
+        .contact:hover {
+            background-color: var(--bg-light);
+        }
+
+        .contact .user-avatar {
+            width: 36px;
+            height: 36px;
+            margin-right: 10px;
+        }
+
+        .contact .user-name {
+            font-weight: 500;
+            font-size: 15px;
+        }
+
+        .online-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            position: absolute;
+            bottom: 8px;
+            left: 28px;
+            border: 2px solid white;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: modalFadeIn 0.3s ease;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            background-color: var(--bg-light);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(255, 127, 0, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 127, 0, 0.3);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .upload-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: var(--bg-light);
+        }
+
+        .upload-label:hover {
+            border-color: var(--primary);
+            background-color: rgba(255, 127, 0, 0.05);
+        }
+
+        .upload-label i {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-label span {
+            color: var(--text-light);
+        }
+
+        .image-preview {
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Friend Requests */
+        .friend-request {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .friend-request:last-child {
+            border-bottom: none;
+        }
+
+        .friend-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--orange));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .friend-mutual {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .friend-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .friend-action {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .accept-btn {
+            background-color: var(--green);
+            color: white;
+        }
+
+        .accept-btn:hover {
+            background-color: #3da856;
+        }
+
+        .decline-btn {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .decline-btn:hover {
+            background-color: var(--bg-hover);
+        }
+
+        /* Video Call */
+        .video-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .video-screen {
+            width: 100%;
+            height: 400px;
+            background-color: #333;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-screen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .video-control {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .video-control:hover {
+            transform: scale(1.1);
+        }
+
+        .video-control.end-call {
+            background-color: var(--red);
+            color: white;
+        }
+
+        /* Profile */
+        .profile-header {
+            height: 300px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            position: relative;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 5px solid white;
+            background: linear-gradient(45deg, var(--primary), var(--orange));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 50px;
+            position: absolute;
+            bottom: -75px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .profile-info {
+            padding-top: 90px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .profile-title {
+            color: var(--text-light);
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .profile-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .left-sidebar {
+                display: none;
+            }
+
+            .search-bar {
+                flex: 0 1 300px;
+            }
+
+            .main-container {
+                padding: 0 2%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header-container {
+                padding: 8px 3%;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .nav-icons .nav-icon:nth-child(2),
+            .nav-icons .nav-icon:nth-child(3),
+            .nav-icons .nav-icon:nth-child(4) {
+                display: none;
+            }
+
+            .post-action span {
+                display: none;
+            }
+
+            .post-action i {
+                margin-right: 0;
+            }
+
+            .profile-stats {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-fire"></i>
+                <span>Boris</span>
+            </a>
+
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Rechercher sur Boris...">
+            </div>
+
+            <div class="nav-icons">
+                <div class="nav-icon active">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="nav-icon" id="friendsBtn">
+                    <i class="fas fa-user-friends"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="nav-icon" id="videoBtn">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div class="nav-icon" id="notificationsBtn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">7</span>
+                </div>
+            </div>
+
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar">
+                    <span>JD</span>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <div class="dropdown-header">
+                        <div class="user-avatar">
+                            <span>JD</span>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">Jean Dupont</div>
+                            <div class="user-email">jean.dupont@example.com</div>
+                        </div>
+                    </div>
+                    <div class="dropdown-item" id="profileBtn">
+                        <i class="fas fa-user"></i>
+                        <span>Mon profil</span>
+                    </div>
+                    <div class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Paramètres</span>
+                    </div>
+                    <div class="dropdown-item">
+                        <i class="fas fa-moon"></i>
+                        <span>Mode sombre</span>
+                    </div>
+                    <div class="dropdown-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Aide et support</span>
+                    </div>
+                    <div class="dropdown-footer">
+                        <div class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Déconnexion</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-item">
+                    <div class="user-avatar">
+                        <span>JD</span>
+                    </div>
+                    <span>Jean Dupont</span>
+                </div>
+
+                <div class="sidebar-item">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Amis</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-users"></i>
+                    <span>Groupes</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-store"></i>
+                    <span>Marketplace</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-tv"></i>
+                    <span>Watch</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-history"></i>
+                    <span>Souvenirs</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Favoris</span>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">
+                    <span>Vos raccourcis</span>
+                    <a href="#">Voir tout</a>
+                </div>
+                <div class="shortcuts">
+                    <div class="shortcut">
+                        <div class="shortcut-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <span>Gastronomie</span>
+                    </div>
+                    <div class="shortcut">
+                        <div class="shortcut-icon">
+                            <i class="fas fa-futbol"></i>
+                        </div>
+                        <span>Sport</span>
+                    </div>
+                    <div class="shortcut">
+                        <div class="shortcut-icon">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <span>Musique</span>
+                    </div>
+                    <div class="shortcut">
+                        <div class="shortcut-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <span>Jeux vidéo</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">
+                    <span>Groupes</span>
+                    <a href="#">Voir tout</a>
+                </div>
+                <div class="sidebar-item">
+                    <div class="user-avatar" style="background: linear-gradient(45deg, var(--orange), var(--red));">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <span>Gastronomie Française</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="user-avatar" style="background: linear-gradient(45deg, var(--green), var(--secondary));">
+                        <i class="fas fa-running"></i>
+                    </div>
+                    <span>Running Club Paris</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="user-avatar" style="background: linear-gradient(45deg, var(--purple), #4a69bb);">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <span>Musique Électronique</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Feed -->
+        <div class="feed">
+            <!-- Stories -->
+            <div class="stories">
+                <div class="story create-story" id="createStoryBtn">
+                    <div class="story-bg"></div>
+                    <div class="story-user">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="story-text">Créer une story</div>
+                </div>
+
+                <div class="story">
+                    <div class="story-bg" style="background-image: url('https://images.unsplash.com/photo-1511497584788-876760111969?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80');"></div>
+                    <div class="story-user">MS</div>
+                    <div class="story-text">Marie Sanchez</div>
+                </div>
+
+                <div class="story">
+                    <div class="story-bg" style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1174&q=80');"></div>
+                    <div class="story-user">PL</div>
+                    <div class="story-text">Pierre Lambert</div>
+                </div>
+
+                <div class="story">
+                    <div class="story-bg" style="background-image: url('https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1275&q=80');"></div>
+                    <div class="story-user">AD</div>
+                    <div class="story-text">Alice Dubois</div>
+                </div>
+
+                <div class="story">
+                    <div class="story-bg" style="background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1274&q=80');"></div>
+                    <div class="story-user">MR</div>
+                    <div class="story-text">Marc Richard</div>
+                </div>
+            </div>
+
+            <!-- Create Post -->
+            <div class="create-post">
+                <div class="post-header">
+                    <div class="user-avatar">
+                        <span>JD</span>
+                    </div>
+                    <div class="post-input">
+                        <input type="text" placeholder="Quoi de neuf, Jean ?" id="createPostInput">
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <div class="post-action" style="color: var(--red);" id="liveVideoBtn">
+                        <i class="fas fa-video"></i>
+                        <span>Vidéo en direct</span>
+                    </div>
+                    <div class="post-action" style="color: var(--green);" id="photoVideoBtn">
+                        <i class="fas fa-images"></i>
+                        <span>Photo/vidéo</span>
+                    </div>
+                    <div class="post-action" style="color: var(--orange);" id="feelingBtn">
+                        <i class="fas fa-smile"></i>
+                        <span>Humeur</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post 1 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="user-avatar">
+                        <span>MS</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">Marie Sanchez</div>
+                        <div class="post-time">Il y a 2 heures · <i class="fas fa-globe-europe"></i></div>
+                    </div>
+                    <div class="nav-icon">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>Quel beau week-end en montagne ! L'air pur, les paysages à couper le souffle... Je vous recommande ce lieu magique 🏔️</p>
+                </div>
+                <img src="https://images.unsplash.com/photo-1511497584788-876760111969?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="Mountain view" class="post-image">
+                <div class="post-stats">
+                    <div class="stats-item">
+                        <i class="fas fa-thumbs-up"></i> 245
+                    </div>
+                    <div class="stats-item">
+                        78 commentaires · 32 partages
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <div class="post-action like-btn">
+                        <i class="far fa-thumbs-up"></i>
+                        <span>J'aime</span>
+                    </div>
+                    <div class="post-action comment-btn">
+                        <i class="far fa-comment"></i>
+                        <span>Commenter</span>
+                    </div>
+                    <div class="post-action">
+                        <i class="fas fa-share"></i>
+                        <span>Partager</span>
+                    </div>
+                </div>
+                <div class="comments-container" id="comments1">
+                    <div class="comment">
+                        <div class="user-avatar">
+                            <span>JD</span>
+                        </div>
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <div class="comment-user">Jean Dupont</div>
+                                <div class="comment-time">Il y a 1 heure</div>
+                            </div>
+                            <div class="comment-text">Wow, magnifique photo ! Où est-ce exactement ? 😍</div>
+                            <div class="comment-actions">
+                                <div class="comment-action">J'aime</div>
+                                <div class="comment-action">Répondre</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="comment">
+                        <div class="user-avatar">
+                            <span>AD</span>
+                        </div>
+                        <div class="comment-content">
+                            <div class="comment-header">
+                                <div class="comment-user">Alice Dubois</div>
+                                <div class="comment-time">Il y a 45 minutes</div>
+                            </div>
+                            <div class="comment-text">J'y suis allée l'année dernière, c'est un endroit incroyable ! Profite bien !</div>
+                            <div class="comment-actions">
+                                <div class="comment-action">J'aime</div>
+                                <div class="comment-action">Répondre</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-comment">
+                        <div class="user-avatar">
+                            <span>JD</span>
+                        </div>
+                        <input type="text" placeholder="Écrire un commentaire...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="post">
+                <div class="post-header">
+                    <div class="user-avatar">
+                        <span>TP</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">TechPro</div>
+                        <div class="post-time">Hier à 18:45 · <i class="fas fa-globe-europe"></i></div>
+                    </div>
+                    <div class="nav-icon">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>🚀 Découvrez notre nouvelle application mobile ! Disponible dès maintenant sur iOS et Android. Téléchargez-la et gagnez 3 mois d'abonnement gratuit !</p>
+                    <p>👉 <a href="#" style="color: var(--primary);">https://techpro.com/app</a></p>
+                </div>
+                <div class="post-stats">
+                    <div class="stats-item">
+                        <i class="fas fa-thumbs-up"></i> 1.2K
+                    </div>
+                    <div class="stats-item">
+                        324 commentaires · 189 partages
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <div class="post-action like-btn">
+                        <i class="far fa-thumbs-up"></i>
+                        <span>J'aime</span>
+                    </div>
+                    <div class="post-action comment-btn">
+                        <i class="far fa-comment"></i>
+                        <span>Commenter</span>
+                    </div>
+                    <div class="post-action">
+                        <i class="fas fa-share"></i>
+                        <span>Partager</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="sidebar-card">
+                <div class="contacts-title">
+                    <div class="sidebar-title">Contacts</div>
+                    <div class="nav-icons">
+                        <div class="nav-icon" id="startVideoCall">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="nav-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="nav-icon">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact">
+                    <div class="user-avatar" style="position: relative;">
+                        <span>AD</span>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="user-name">Alice Dubois</div>
+                </div>
+
+                <div class="contact">
+                    <div class="user-avatar" style="position: relative;">
+                        <span>MR</span>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="user-name">Marc Richard</div>
+                </div>
+
+                <div class="contact">
+                    <div class="user-avatar" style="position: relative;">
+                        <span>SM</span>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="user-name">Sophie Martin</div>
+                </div>
+
+                <div class="contact">
+                    <div class="user-avatar" style="position: relative;">
+                        <span>TG</span>
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="user-name">Thomas Garcia</div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <div class="sidebar-title">
+                    <span>Suggestions d'amis</span>
+                    <a href="#">Voir tout</a>
+                </div>
+
+                <div class="friend-request">
+                    <div class="friend-avatar">PL</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Pierre Lambert</div>
+                        <div class="friend-mutual">5 amis en commun</div>
+                        <div class="friend-actions">
+                            <div class="friend-action accept-btn">Accepter</div>
+                            <div class="friend-action decline-btn">Refuser</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="friend-request">
+                    <div class="friend-avatar">JB</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Julie Bernard</div>
+                        <div class="friend-mutual">12 amis en commun</div>
+                        <div class="friend-actions">
+                            <div class="friend-action accept-btn">Accepter</div>
+                            <div class="friend-action decline-btn">Refuser</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="friend-request">
+                    <div class="friend-avatar">CL</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Christophe Leroy</div>
+                        <div class="friend-mutual">3 amis en commun</div>
+                        <div class="friend-actions">
+                            <div class="friend-action accept-btn">Accepter</div>
+                            <div class="friend-action decline-btn">Refuser</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Create Post Modal -->
+    <div class="modal" id="createPostModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Créer une publication</div>
+                <div class="modal-close" id="closePostModal">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="post-header">
+                    <div class="user-avatar">
+                        <span>JD</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">Jean Dupont</div>
+                        <div class="post-time">
+                            <select id="postAudience">
+                                <option value="public"><i class="fas fa-globe-europe"></i> Public</option>
+                                <option value="friends">Amis</option>
+                                <option value="only-me">Moi uniquement</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <textarea id="postContent" placeholder="Quoi de neuf, Jean ?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="file-upload">
+                        <div class="upload-label" id="uploadLabel">
+                            <i class="fas fa-images"></i>
+                            <span>Ajouter une photo ou une vidéo</span>
+                            <input type="file" id="postImage" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="image-preview" id="imagePreview">
+                        <img id="previewImg" src="" alt="Image preview">
+                        <button class="btn" id="removeImageBtn">Supprimer l'image</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" id="publishPostBtn">Publier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friend Requests Modal -->
+    <div class="modal" id="friendRequestsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Demandes d'amis</div>
+                <div class="modal-close" id="closeFriendRequestsModal">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="friend-request">
+                    <div class="friend-avatar">PL</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Pierre Lambert</div>
+                        <div class="friend-mutual">5 amis en commun</div>
+                        <div class="friend-actions">
+                            <div class="friend-action accept-btn">Accepter</div>
+                            <div class="friend-action decline-btn">Refuser</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="friend-request">
+                    <div class="friend-avatar">JB</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Julie Bernard</div>
+                        <div class="friend-mutual">12 amis en commun</div>
+                        <div class="friend-actions">
+                            <div class="friend-action accept-btn">Accepter</div>
+                            <div class="friend-action decline-btn">Refuser</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="friend-request">
+                    <div class="friend-avatar">CL</div>
+                    <div class="friend-info">
+                        <div class="friend-name">Christophe Leroy</div>
+                        <div class="friend-mutual">3 amis en commun</div>
+                        <div class="friend-actions">
+                            <div class="friend-action accept-btn">Accepter</div>
+                            <div class="friend-action decline-btn">Refuser</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Call Modal -->
+    <div class="modal" id="videoCallModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Appel vidéo avec Alice Dubois</div>
+                <div class="modal-close" id="closeVideoCallModal">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="video-container">
+                    <div class="video-screen">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Alice Dubois">
+                    </div>
+                    <div class="video-controls">
+                        <div class="video-control">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+                        <div class="video-control">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <div class="video-control end-call">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="profile-header"></div>
+            <div class="profile-avatar">JD</div>
+            <div class="profile-info">
+                <div class="profile-name">Jean Dupont</div>
+                <div class="profile-title">Développeur Web | Paris</div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">245</div>
+                        <div class="stat-label">Amis</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">78</div>
+                        <div class="stat-label">Publications</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1.2K</div>
+                        <div class="stat-label">J'aime</div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="btn btn-primary">Modifier le profil</button>
+                    <button class="btn" style="background-color: var(--bg-light);">Ajouter à la story</button>
+                </div>
+            </div>
+            <div class="modal-close" id="closeProfileModal" style="position: absolute; top: 20px; right: 20px;">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gestion de l'interface utilisateur
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu utilisateur dropdown
+            const userMenu = document.getElementById('userMenu');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            userMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+
+            // Fermer le menu dropdown en cliquant ailleurs
+            document.addEventListener('click', function(e) {
+                if (!userMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+
+            // Gestion des likes
+            const likeButtons = document.querySelectorAll('.like-btn');
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.replace('far', 'fas');
+                        this.classList.add('liked');
+                    } else {
+                        icon.classList.replace('fas', 'far');
+                        this.classList.remove('liked');
+                    }
+                });
+            });
+
+            // Gestion des commentaires
+            const commentButtons = document.querySelectorAll('.comment-btn');
+            commentButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const post = this.closest('.post');
+                    const commentsContainer = post.querySelector('.comments-container');
+                    commentsContainer.classList.toggle('show');
+                });
+            });
+
+            // Création de post modal
+            const createPostInput = document.getElementById('createPostInput');
+            const createPostModal = document.getElementById('createPostModal');
+            const closePostModal = document.getElementById('closePostModal');
+            const publishPostBtn = document.getElementById('publishPostBtn');
+            const postImage = document.getElementById('postImage');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+            const removeImageBtn = document.getElementById('removeImageBtn');
+            const uploadLabel = document.getElementById('uploadLabel');
+
+            createPostInput.addEventListener('click', function() {
+                createPostModal.classList.add('show');
+            });
+
+            closePostModal.addEventListener('click', function() {
+                createPostModal.classList.remove('show');
+            });
+
+            publishPostBtn.addEventListener('click', function() {
+                const postContent = document.getElementById('postContent').value;
+                if (postContent.trim() !== '') {
+                    createNewPost(postContent);
+                    createPostModal.classList.remove('show');
+                    document.getElementById('postContent').value = '';
+                    imagePreview.style.display = 'none';
+                } else {
+                    alert('Veuillez écrire quelque chose à publier !');
+                }
+            });
+
+            // Gestion des images pour les posts
+            postImage.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(event) {
+                        previewImg.src = event.target.result;
+                        imagePreview.style.display = 'block';
+                    }
+
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+
+            removeImageBtn.addEventListener('click', function() {
+                imagePreview.style.display = 'none';
+                postImage.value = '';
+            });
+
+            // Création dynamique d'un nouveau post
+            function createNewPost(content) {
+                const feed = document.querySelector('.feed');
+                const newPost = document.createElement('div');
+                newPost.className = 'post';
+                newPost.innerHTML = `
+                    <div class="post-header">
+                        <div class="user-avatar">
+                            <span>JD</span>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">Jean Dupont</div>
+                            <div class="post-time">À l'instant · <i class="fas fa-globe-europe"></i></div>
+                        </div>
+                        <div class="nav-icon">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>${content}</p>
+                    </div>
+                    ${imagePreview.style.display === 'block' ?
+                        `<img src="${previewImg.src}" alt="Post image" class="post-image">` : ''}
+                    <div class="post-stats">
+                        <div class="stats-item">
+                            <i class="fas fa-thumbs-up"></i> 0
+                        </div>
+                        <div class="stats-item">
+                            0 commentaires · 0 partages
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action like-btn">
+                            <i class="far fa-thumbs-up"></i>
+                            <span>J'aime</span>
+                        </div>
+                        <div class="post-action comment-btn">
+                            <i class="far fa-comment"></i>
+                            <span>Commenter</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Partager</span>
+                        </div>
+                    </div>
+                    <div class="comments-container">
+                        <div class="add-comment">
+                            <div class="user-avatar">
+                                <span>JD</span>
+                            </div>
+                            <input type="text" placeholder="Écrire un commentaire...">
+                        </div>
+                    </div>
+                `;
+
+                // Ajouter le nouveau post en haut du fil d'actualité
+                const createPostElement = document.querySelector('.create-post');
+                feed.insertBefore(newPost, createPostElement.nextElementSibling);
+
+                // Ajouter les écouteurs d'événements au nouveau post
+                newPost.querySelector('.like-btn').addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.replace('far', 'fas');
+                        this.classList.add('liked');
+                    } else {
+                        icon.classList.replace('fas', 'far');
+                        this.classList.remove('liked');
+                    }
+                });
+
+                newPost.querySelector('.comment-btn').addEventListener('click', function() {
+                    const commentsContainer = this.closest('.post').querySelector('.comments-container');
+                    commentsContainer.classList.toggle('show');
+                });
+            }
+
+            // Gestion des demandes d'amis
+            const friendsBtn = document.getElementById('friendsBtn');
+            const friendRequestsModal = document.getElementById('friendRequestsModal');
+            const closeFriendRequestsModal = document.getElementById('closeFriendRequestsModal');
+
+            friendsBtn.addEventListener('click', function() {
+                friendRequestsModal.classList.add('show');
+            });
+
+            closeFriendRequestsModal.addEventListener('click', function() {
+                friendRequestsModal.classList.remove('show');
+            });
+
+            // Gestion des boutons accepter/refuser
+            const acceptBtns = document.querySelectorAll('.accept-btn');
+            const declineBtns = document.querySelectorAll('.decline-btn');
+
+            acceptBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const request = this.closest('.friend-request');
+                    request.style.opacity = '0.5';
+                    setTimeout(() => {
+                        request.remove();
+                        updateFriendCount();
+                    }, 300);
+                });
+            });
+
+            declineBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const request = this.closest('.friend-request');
+                    request.style.opacity = '0.5';
+                    setTimeout(() => {
+                        request.remove();
+                        updateFriendCount();
+                    }, 300);
+                });
+            });
+
+            function updateFriendCount() {
+                const badge = friendsBtn.querySelector('.badge');
+                const current = parseInt(badge.textContent);
+                badge.textContent = current - 1;
+            }
+
+            // Gestion des appels vidéo
+            const videoBtn = document.getElementById('videoBtn');
+            const startVideoCallBtn = document.getElementById('startVideoCall');
+            const videoCallModal = document.getElementById('videoCallModal');
+            const closeVideoCallModal = document.getElementById('closeVideoCallModal');
+
+            videoBtn.addEventListener('click', function() {
+                videoCallModal.classList.add('show');
+            });
+
+            startVideoCallBtn.addEventListener('click', function() {
+                videoCallModal.classList.add('show');
+            });
+
+            closeVideoCallModal.addEventListener('click', function() {
+                videoCallModal.classList.remove('show');
+            });
+
+            // Gestion du profil
+            const profileBtn = document.getElementById('profileBtn');
+            const profileModal = document.getElementById('profileModal');
+            const closeProfileModal = document.getElementById('closeProfileModal');
+
+            profileBtn.addEventListener('click', function() {
+                profileModal.classList.add('show');
+            });
+
+            closeProfileModal.addEventListener('click', function() {
+                profileModal.classList.remove('show');
+            });
+
+            // Animation pour les stories
+            const stories = document.querySelectorAll('.story:not(.create-story)');
+            stories.forEach(story => {
+                story.addEventListener('click', function() {
+                    this.classList.add('active');
+                    setTimeout(() => {
+                        this.classList.remove('active');
+                    }, 300);
+                });
+            });
+
+            // Création de story
+            const createStoryBtn = document.getElementById('createStoryBtn');
+            createStoryBtn.addEventListener('click', function() {
+                alert('Fonction de création de story ouverte !');
+            });
+        });
+    </script>
+</body>
+</html>
